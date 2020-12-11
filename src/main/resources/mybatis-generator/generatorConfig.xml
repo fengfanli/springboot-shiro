@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 配置properties
+         可以在标签内部配置连接数据库信息，也可以通过属性引用外部配置文件信息
+         resource属性：用于指定配置文件位置，是按照类路径的写法来写，并且必须存在于类路径下（推荐使用）
+         url属性：要求按照url的写法来写地址
+                写法：协议 主机 端口 URI 例如：http://localhost:8080/mybatisserver/demo
+                URL可以唯一标识一个资源的位置；
+                URI可以在应用中唯一标识一个资源的位置；
+                范围：URL>URI
+    -->
+    <properties resource="mybatis-generator/config.properties"/>
+    <!-- 数据库驱动(数据库的JDBC驱动):选择你的本地硬盘上面的数据库驱动包位置-->
+    <classPathEntry location="${classPathEntry.location}"/>
+
+    <!-- 一个数据库一个context -->
+    <!--必选属性id，用来唯一确定一个<context>元素，该id属性可以在运行MBG的使用。-->
+    <!--defaultModelType="flat" 大数据字段，不分表
+        这个属性定义了MBG如何生成**实体类**。这个属性有以下可选值：
+        conditional: *这是默认值*,这个模型和下面的hierarchical类似，除了如果那个单独的类将只包含一个字段，将不会生成一个单独的类。 因此,如果一个表的主键只有一个字段,那么不会为该字段生成单独的实体类,会将该字段合并到基本实体类中。
+        flat: 该模型为每一张表只生成一个实体类。这个实体类包含表中的所有字段。**这种模型最简单，推荐使用。
+        hierarchical: 如果表有主键,那么该模型会产生一个单独的主键实体类,如果表还有BLOB字段， 则会为表生成一个包含所有BLOB字段的单独的实体类,然后为所有其他的字段生成一个单独的实体类。 MBG会在所有生成的实体类之间维护一个继承关系。
+    -->
+    <!--targetRuntime="MyBatis3"
+        此属性用于指定生成的代码的运行时环境。该属性支持以下可选值：
+        MyBatis3:*这是默认值*
+        MyBatis3Simple
+        Ibatis2Java2
+        Ibatis2Java5 一般情况下使用默认值即可，有关这些值的具体作用以及区别请查看中文文档的详细内容。
+    -->
+
+    <context id="MysqlTables" targetRuntime="MyBatis3" defaultModelType="flat">
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <property name="javaFileEncoding" value="utf-8"/>
+
+
+        <!-- 格式化XML代码 -->
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+        <!-- JavaBean 实现 序列化 接口 -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <!-- 生成toString -->
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+
+        <!--通用 Mapper 插件，可以生成带注解的实体类， 注解包括：@Table、@Column、@Id-->
+        <!--<plugin type="tk.mybatis.mapper.generator.MapperPlugin">-->
+            <!--<property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>-->
+            <!-- caseSensitive默认false，当数据库表名区分大小写时，可以将该属性设置为true -->
+            <!--<property name="caseSensitive" value="true"/>-->
+        <!--</plugin>-->
+
+
+        <!-- optional，旨在创建class时，对注释进行控制 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/><!-- 是否取消注释 -->
+            <property name="suppressDate" value="true"/> <!-- 是否生成注释代时间戳-->
+        </commentGenerator>
+
+        <!--数据库链接URL，用户名、密码 -->
+        <jdbcConnection driverClass="${jdbc.driverClass}"
+                        connectionURL="${jdbc.url}"
+                        userId="${jdbc.username}"
+                        password="${jdbc.password}"/>
+        <!-- 类型转换 -->
+        <javaTypeResolver>
+            <!-- 是否使用bigDecimal,
+                false: 可自动转化以下类型（Long, Integer, Short, etc.），把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer(默认)
+                true:  把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal
+            -->
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- 生成模型的包名和位置，也就是生成实体类地址 -->
+        <javaModelGenerator targetPackage="${package.bean}" targetProject="src/main/java">
+            <!-- 默认false 是否允许子包 -->
+            <property name="enableSubPackages" value="false"/>
+            <!-- 默认false 是否对model添加 构造函数 -->
+            <property name="constructorBased" value="false"/>
+            <!-- 默认false 建立的Model对象是否 不可改变  即生成的Model对象不会有 setter方法，只有构造方法 -->
+            <property name="immutable" value="false"/>
+            <!-- 默认false 是否对类CHAR类型的列的数据进行trim操作 -->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 生成映射文件的包名和位置，也就是生成 xml文件,文件默认生成在 resources.mapper 文件夹下-->
+        <sqlMapGenerator targetPackage="${package.mapper}" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!-- 生成 DAO 接口的位置 -->
+        <javaClientGenerator targetPackage="${package.dao}" targetProject="src/main/java"
+                             type="XMLMAPPER">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <!-- 要生成的表 tableName 是数据库中的表名或视图名 ，domainObjectName是实体类名-->
+        <table tableName="${table1.tableName}" domainObjectName="${table1.domainObjectName}"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="${table2.tableName}" domainObjectName="${table2.domainObjectName}"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="${table3.tableName}" domainObjectName="${table3.domainObjectName}"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="${table4.tableName}" domainObjectName="${table4.domainObjectName}"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="${table5.tableName}" domainObjectName="${table5.domainObjectName}"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <!--<table tableName="sys_user" domainObjectName="SysUser"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <columnOverride column="sex" javaType="java.lang.Integer"/>
+            <columnOverride column="status" javaType="java.lang.Integer"/>
+            <columnOverride column="create_where" javaType="java.lang.Integer"/>
+            <columnOverride column="deleted" javaType="java.lang.Integer"/>
+        </table>-->
+    </context>
+</generatorConfiguration>

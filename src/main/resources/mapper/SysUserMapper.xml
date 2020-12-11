@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.feng.dao.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="com.feng.bean.SysUser" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="salt" property="salt" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="dept_id" property="deptId" jdbcType="VARCHAR" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="update_id" property="updateId" jdbcType="VARCHAR" />
+    <result column="create_where" property="createWhere" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, username, salt, `password`, phone, dept_id, real_name, nick_name, email, `status`, 
+    sex, deleted, create_id, update_id, create_where, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_user
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.feng.bean.SysUser" >
+    insert into sys_user (id, username, salt, 
+      `password`, phone, dept_id, 
+      real_name, nick_name, email, 
+      `status`, sex, deleted, 
+      create_id, update_id, create_where, 
+      create_time, update_time)
+    values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{deptId,jdbcType=VARCHAR}, 
+      #{realName,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{sex,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, 
+      #{createId,jdbcType=VARCHAR}, #{updateId,jdbcType=VARCHAR}, #{createWhere,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.feng.bean.SysUser" >
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="salt != null" >
+        salt,
+      </if>
+      <if test="password != null" >
+        `password`,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="deptId != null" >
+        dept_id,
+      </if>
+      <if test="realName != null" >
+        real_name,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+      <if test="createWhere != null" >
+        create_where,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null" >
+        #{deptId,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="createWhere != null" >
+        #{createWhere,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.feng.bean.SysUser" >
+    update sys_user
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        `password` = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null" >
+        dept_id = #{deptId,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="createWhere != null" >
+        create_where = #{createWhere,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.feng.bean.SysUser" >
+    update sys_user
+    set username = #{username,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      `password` = #{password,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      dept_id = #{deptId,jdbcType=VARCHAR},
+      real_name = #{realName,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      sex = #{sex,jdbcType=INTEGER},
+      deleted = #{deleted,jdbcType=INTEGER},
+      create_id = #{createId,jdbcType=VARCHAR},
+      update_id = #{updateId,jdbcType=VARCHAR},
+      create_where = #{createWhere,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="getUserByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT * FROM sys_user
+  </select>
+</mapper>
