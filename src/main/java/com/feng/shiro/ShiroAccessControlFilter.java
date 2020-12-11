@@ -72,7 +72,7 @@ public class ShiroAccessControlFilter extends AccessControlFilter {
             // 登录之后， 进入CustomRealm类 进入认证与授权
         } catch (Exception e) {
             log.info("ShiroAccessControlFilter.onAccessDenied() 出错了");
-            customRsponse(500,e.getLocalizedMessage(),servletResponse);
+            customRsponse(555,e.getLocalizedMessage(),servletResponse);
             return false; // 直接返回客户端
         }
         return true;

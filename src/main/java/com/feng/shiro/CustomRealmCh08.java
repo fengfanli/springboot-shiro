@@ -151,19 +151,6 @@ public class CustomRealmCh08 extends AuthorizingRealm {
         return userMap.get(username);
     }
 
-    /**
-     * 获得密文密码
-     * @Author:     小冯
-     * @UpdateUser:
-     * @Version:     0.0.1
-     * @param currentPassword
-     * @return       java.lang.String
-     * @throws
-     */
-    private String getPasswordMatcher(String currentPassword){
-        return new Md5Hash(currentPassword, null,2).toString();
-    }
-
 
     /**
      * 获得密文密码

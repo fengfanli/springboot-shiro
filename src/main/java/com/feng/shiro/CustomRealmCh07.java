@@ -91,7 +91,8 @@ public class CustomRealmCh07 extends AuthorizingRealm {
         String matcherPwd=getPasswordMatcher(password);
         System.out.println("---------->获取到的密文密码:" + matcherPwd);
         // 传入用户名、密码、name 。流转到下面去认证
-        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(username, matcherPwd, getName());
+//        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(username, matcherPwd, getName());
+        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(username, password, getName());
         return authenticationInfo;
     }
 
