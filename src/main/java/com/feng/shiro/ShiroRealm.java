@@ -5,6 +5,7 @@ import com.feng.service.UserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +43,27 @@ public class ShiroRealm extends AuthorizingRealm {
         if(userInfo == null){
             return null;
         }
+        String passwordMatcher = getPasswordMatcher(userInfo.getPassword());
         // 三个参数：user，password，ShiroRealm 字符串
         // SimpleAuthenticationInfo 有好多构造函数
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(
-                userInfo,
-                userInfo.getPassword(),
+                username,
+                passwordMatcher,
                 ShiroRealm.class.getName());
         return info;
+    }
+
+    /**
+     * 获得密文密码
+     * 不加盐
+     * @Author:     小冯
+     * @UpdateUser:
+     * @Version:     0.0.1
+     * @param currentPassword
+     * @return       java.lang.String
+     * @throws
+     */
+    private String getPasswordMatcher(String currentPassword){
+        return new Md5Hash(currentPassword, null,2).toString();
     }
 }
