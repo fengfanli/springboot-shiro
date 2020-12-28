@@ -1,10 +1,10 @@
 package com.feng.shiro;
 
 import com.alibaba.fastjson.JSON;
-import com.feng.utils.DataResult;
+import com.feng.constant.Constant;
+import com.feng.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.springframework.util.StringUtils;
 
@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @ClassName: CustomAccessControlerFilter
@@ -57,23 +59,29 @@ public class ShiroAccessControlFilter extends AccessControlFilter {
     @Override
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
         HttpServletRequest request= (HttpServletRequest) servletRequest;
-        log.info(request.getMethod());
-        log.info(request.getRequestURL().toString());
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        //判断客户端是否携带 FENG_TEST
         try {
-            String accessToken=request.getHeader("FENG_TEST");
-            if(StringUtils.isEmpty(accessToken)){  // 判断 FENG_TEST 是否为空
-                System.out.println("FENG_TEST不存在，报错");;
+            log.info("接口请求方式{}",request.getMethod());
+            log.info("接口请求地址{}",request.getRequestURI());
+            String token=request.getHeader(Constant.TOKEN_SESSION_ID);
+            if(StringUtils.isEmpty(token)){
+                throw new BusinessException(4010001,"用户凭证已失效请重新登录认证");
             }
-            UsernamePasswordToken token=new UsernamePasswordToken(username, password);
-            getSubject(servletRequest,servletResponse).login(token);
-            // 登录之后， 进入CustomRealm类 进入认证与授权
-        } catch (Exception e) {
-            log.info("ShiroAccessControlFilter.onAccessDenied() 出错了");
-            customRsponse(555,e.getLocalizedMessage(),servletResponse);
-            return false; // 直接返回客户端
+            ShiroUsernamePasswordToken customUsernamePasswordToken=new ShiroUsernamePasswordToken(token);
+            getSubject(servletRequest,servletResponse).login(customUsernamePasswordToken);
+        } catch (BusinessException e) {
+            customResponse(e.getMessageCode(),e.getMessage(),servletResponse);
+            return false;
+        } catch (AuthenticationException e) {
+            if(e.getCause() instanceof BusinessException){
+                BusinessException businessException= (BusinessException) e.getCause();
+                customResponse(businessException.getMessageCode(),businessException.getMessage(),servletResponse);
+            }else {
+                customResponse(4000001,"用户认证失败",servletResponse);
+            }
+            return false;
+        }catch (Exception e){
+            customResponse(5000001,"系统异常",servletResponse);
+            return false;
         }
         return true;
     }
@@ -85,10 +93,12 @@ public class ShiroAccessControlFilter extends AccessControlFilter {
      * @param msg
      * @param response
      */
-    private void customRsponse(int code, String msg, ServletResponse response) {
+    private void customResponse(int code, String msg, ServletResponse response) {
         // 自定义异常的类，用户返回给客户端相应的JSON格式的信息
         try {
-            DataResult result = DataResult.getResult(code, msg);
+            Map<String, Object> result = new HashMap<>();
+            result.put("code", code);
+            result.put("msg", msg);
             response.setContentType("application/json; charset=utf-8");
             response.setCharacterEncoding("UTF-8");
             String userJson = JSON.toJSONString(result);

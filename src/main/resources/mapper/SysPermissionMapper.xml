@@ -185,4 +185,18 @@
       deleted = #{deleted,jdbcType=TINYINT}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <!--@Description: 查询该权限的子集权限-->
+  <select id="getPermissionByPermissionIds" parameterType="String" resultType="com.feng.bean.SysPermission">
+    select <include refid="Base_Column_List"></include>
+    from sys_permission
+    <where>
+      id in
+      <foreach collection="list" item="item" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </where>
+    and deleted = 1
+    order by order_num desc
+  </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.feng.config;
 
 import com.feng.shiro.ShiroAccessControlFilter;
+import com.feng.shiro.ShiroHashedCredentialsMatcher;
 import com.feng.shiro.ShiroRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
@@ -21,30 +22,16 @@ import java.util.Map;
 public class ShiroConfig {
 
     /**
-     * 凭证匹配器
-     * （由于我们的密码校验交给 shiro 的 SimpleAuthenticationInfo 进行处理了）
-     *
-     * @return
-     */
-    @Bean(name = "hashedCredentialsMatcher")
-    public HashedCredentialsMatcher hashedCredentialsMatcher(){
-        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        hashedCredentialsMatcher.setHashAlgorithmName("md5"); //散列算法:这里使用MD5算法;
-        hashedCredentialsMatcher.setHashIterations(2);        //散列的次数，比如散列两次，相当于 md5(md5(""));
-        return hashedCredentialsMatcher;
-    }
-
-    /**
      * token 的过滤
-     * 现在使用上面的替代了下面的这个。上面的类 HashedCredentialsMatcher 需要搞明白
-     * 学习说明：其实 下面的 CustomHashedCredentialsMatcher（自定义的） 也继承了 HashedCredentialsMatcher。
+     * 自定义token 校验
+     * 学习说明：其实 下面的 ShiroHashedCredentialsMatcher（自定义的） 也继承了 HashedCredentialsMatcher。
      * 需要在 CustomRealm bean 中进行设置
      * @return
      */
-    /*@Bean(name = "customHashedCredentialsMatcher")
-    public CustomHashedCredentialsMatcher customHashedCredentialsMatcher() {
-        return new CustomHashedCredentialsMatcher();
-    }*/
+    @Bean(name = "shiroHashedCredentialsMatcher")
+    public ShiroHashedCredentialsMatcher shiroHashedCredentialsMatcher() {
+        return new ShiroHashedCredentialsMatcher();
+    }
 
     /**
      * 登录的 认证域
@@ -53,7 +40,7 @@ public class ShiroConfig {
      * @return
      */
     @Bean(name = "shiroRealm")
-    public ShiroRealm getShiroRealm(@Qualifier("hashedCredentialsMatcher") HashedCredentialsMatcher hashedCredentialsMatcher) {
+    public ShiroRealm getShiroRealm(@Qualifier("shiroHashedCredentialsMatcher") HashedCredentialsMatcher hashedCredentialsMatcher) {
         ShiroRealm shiroRealm = new ShiroRealm();
         // 自定义 处理 token 过滤
         shiroRealm.setCredentialsMatcher(hashedCredentialsMatcher);
@@ -101,10 +88,19 @@ public class ShiroConfig {
          * */
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         // 配置不会被拦截的链接 顺序判断
-        filterChainDefinitionMap.put("/login/loginUser", "anon");
-
+        filterChainDefinitionMap.put("/user/login", "anon");
+        //放开 swagger-ui 地址
+        filterChainDefinitionMap.put("/swagger/**", "anon");
+        filterChainDefinitionMap.put("/v2/api-docs", "anon");
+        filterChainDefinitionMap.put("/swagger-ui.html", "anon");
+        filterChainDefinitionMap.put("/swagger-resources/**", "anon");
+        filterChainDefinitionMap.put("/webjars/**", "anon");
         // 拦截所有
-        filterChainDefinitionMap.put("/**", "token,authc");
+        filterChainDefinitionMap.put("/**", "token");
+        /**
+         * 默认 是使用  authc 来过滤的，这里是使用上面定义的token来过滤拦截的。
+         */
+//        filterChainDefinitionMap.put("/**", "token,authc");
 
         // 没有登录的用户请求需要登录的页面时自动跳转到登录页面。 配置 shiro 默认登录界面地址，
         shiroFilterFactoryBean.setLoginUrl("/api/user/login");

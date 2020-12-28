@@ -114,4 +114,16 @@
       deleted = #{deleted,jdbcType=TINYINT}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <!--@Description: 根据角色id集合 获取 角色信息-->
+  <select id="getRoleInfoByRoleIds" parameterType="String" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"></include>
+    from sys_role
+    <where>
+      id in
+      <foreach collection="list" item="item" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </where>
+  </select>
 </mapper>

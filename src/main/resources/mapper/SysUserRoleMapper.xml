@@ -79,4 +79,32 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <!-- @Description: 根据用户id 查出 关联角色id 集合-->
+  <select id="getRoleIdsByUserId" resultType="java.lang.String">
+    SELECT role_id
+    from sys_user_role
+    where user_id =#{userId}
+  </select>
+
+  <!-- @Description: 获取和该角色集合相关连的用户id-->
+  <select id="getUserIdsByRoleIds" parameterType="String" resultType="String">
+    select user_id
+    from sys_user_role
+    <where>
+      role_id in
+      <foreach collection="list" item="item" separator="," open="(" close=")">
+        #{item}
+      </foreach>
+    </where>
+  </select>
+
+  <!--@Description: 根据角色id 获取 用户id集合-->
+  <select id="getUserIdsByRoleId" parameterType="String" resultType="String">
+    select user_id
+    from sys_user_role
+    <where>
+      role_id = #{roleId}
+    </where>
+  </select>
 </mapper>
