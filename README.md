@@ -5,6 +5,16 @@ shiro的学习，还有springboot整合shiro部分
 ## 1. 测试学习
 1. test包中是 关于 shiro的 8个由浅入深的demo测试类。
     包括shiro包下的 CustomRealmCh06、CustomRealmCh07、CustomRealmCh08 和 shiro.ini 文件
+
+2. Ch01_authentication.java ：`shiro 用户认证`
+3. Ch02_authorization.java  ：` shiro 用户授权 `
+4. Ch03_testIniRealm.java + shiro.ini 文件：`使用 Ini文件 进行认证授权`
+5. Ch04_testJdbcRealm.java  ： `使用 JdbcRealm 进行认证授权`
+6. Ch05_testNewJdbcRealm.java ：`自定义SQL认证授权`
+7. Ch06_testCustomRealm.java + CustomRealmCh06.java数据域 : `自定义 Realm 进行认证授权（important）`
+8. Ch07_testMatcher.java + CustomRealmCh07.java数据域     : `shiro不加盐加密认证`
+9. Ch08_testSaltMatcher.java + CustomRealmCh08.java数据域 : `shiro加盐  加密认证`
+    
 ## 2. springboot整合shiro
 1. swagger 做Restful风格的Api生成文档工具
     //@EnableSwagger2 ,配置类注解目前没有开启，开启之后，会报错。
