@@ -18,6 +18,7 @@ shiro的学习，还有springboot整合shiro部分
 ## 2. springboot整合shiro
 1. swagger 做Restful风格的Api生成文档工具
     //@EnableSwagger2 ,配置类注解目前没有开启，开启之后，会报错。
+    已解决：mybatis的逆向工程插件依赖放到了 plugin 下面。
 2. redis 做 token 的存储，
 3. shiro 做 token的过滤和 权限的授权
 4. exception/BusinessException类做运行时异常的处理

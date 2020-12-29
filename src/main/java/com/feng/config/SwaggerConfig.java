@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-//@EnableSwagger2
+@EnableSwagger2
 public class SwaggerConfig {
     @Value("${swagger2.enable}")
     private boolean enable;
@@ -39,7 +39,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.feng.shiro.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.feng.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .globalOperationParameters(pars)
